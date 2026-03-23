@@ -188,6 +188,8 @@ footer{height:28px;padding:0 2rem;border-top:1px solid rgba(26,18,8,0.08);displa
   <button class="tab active" onclick="switchTab('catalog')">🖼 Catalogue</button>
   <div class="tab-sep"></div>
   <button class="tab" onclick="openDataTab()">✏️ Mes données</button>
+  <div class="tab-sep"></div>
+  <button class="tab" onclick="openNetworkTab()">🌐 Autres médiathèques réseaux</button>
   <div class="group-pills">
     <button class="pill pill-all active"  onclick="filterGroup('all')">Tous</button>
     <button class="pill pill-mel"         onclick="filterGroup('mel')">🔵 Projet MEL</button>
@@ -196,6 +198,32 @@ footer{height:28px;padding:0 2rem;border-top:1px solid rgba(26,18,8,0.08);displa
 </div>
 <main>
   <div id="view-catalog"></div>
+  <div id="view-network" style="display:none;flex:1;overflow:hidden;flex-direction:column">
+    <div class="data-header">
+      <h2 class="data-title">Autres médiathèques réseaux</h2>
+    </div>
+    <div style="padding:2rem 2.5rem;overflow-y:auto;flex:1">
+      <p style="font-size:0.85rem;color:rgba(26,18,8,0.55);margin-bottom:1.5rem;line-height:1.6">
+        Accédez aux catalogues de roll-ups des autres médiathèques du réseau.
+      </p>
+      <div id="network-list" style="display:flex;flex-direction:column;gap:0.75rem">
+        <div style="padding:1rem 1.25rem;border:1.5px solid rgba(26,18,8,0.1);border-radius:10px;display:flex;align-items:center;justify-content:space-between;background:white">
+          <div>
+            <div style="font-weight:600;font-size:0.9rem">Médiathèque Jean Lévy (Lille)</div>
+            <div style="font-size:0.72rem;color:var(--sage);margin-top:2px">Médiathèque centrale – Catalogue actuel</div>
+          </div>
+          <span style="font-size:0.7rem;padding:3px 10px;border-radius:20px;background:var(--mel-light);color:var(--mel);font-weight:600;border:1px solid rgba(26,92,154,0.2)">Ce site</span>
+        </div>
+        <div style="padding:1rem 1.25rem;border:1.5px dashed rgba(26,18,8,0.15);border-radius:10px;display:flex;align-items:center;justify-content:space-between;background:var(--paper)">
+          <div>
+            <div style="font-weight:500;font-size:0.88rem;color:rgba(26,18,8,0.45);font-style:italic">Ajouter une médiathèque réseau…</div>
+            <div style="font-size:0.72rem;color:rgba(107,123,94,0.6);margin-top:2px">Complétez avec les URL des autres sites</div>
+          </div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(26,18,8,0.25)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
   <div id="view-data" style="display:none;flex:1;overflow:hidden;flex-direction:column">
     <div class="data-header">
       <h2 class="data-title">Gérer les roll-ups</h2>
@@ -464,11 +492,21 @@ function goTo(i) {
   renderCatalog(d);
   setTimeout(function(){ isAnimating = false; }, 450);
 }
+function openNetworkTab() {
+  var t = document.querySelectorAll(".tab");
+  t.forEach(function(b){ b.classList.remove("active"); });
+  t[2].classList.add("active");
+  document.getElementById("view-catalog").style.display = "none";
+  document.getElementById("view-data").style.display = "none";
+  document.getElementById("view-network").style.display = "flex";
+}
 function switchTab(tab) {
   var t = document.querySelectorAll(".tab");
   t[0].classList.toggle("active", tab === "catalog");
   t[1].classList.toggle("active", tab === "data");
+  if (t[2]) t[2].classList.remove("active");
   document.getElementById("view-catalog").style.display = tab === "catalog" ? "" : "none";
+  document.getElementById("view-network").style.display = "none";
   var dv = document.getElementById("view-data");
   dv.style.display = tab === "data" ? "flex" : "none";
   if (tab === "data") renderDataTable();
